@@ -25,8 +25,8 @@ import RPi.GPIO as GPIO
 import time
  
 # Define GPIO to LCD mapping
-LCD_RS = 7
-LCD_E  = 8
+LCD_RS = 21  # change from GPIO 7 to GPIO 21
+LCD_E  = 20  # change from GPIO 8 to GPIO 20
 LCD_D4 = 25
 LCD_D5 = 24
 LCD_D6 = 23
