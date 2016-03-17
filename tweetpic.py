@@ -23,6 +23,7 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 # Send the tweet with photo
-photo_path = '/home/pi/code/python/' + photo_name
+# Note: the image file path is where the image is located on my machine
+photo_path = '/home/pi/code/pi-playground/images/' + photo_name
 status = 'Photo tweet from the PI: ' + i.strftime('%Y/%m/%d %H:%M:%S') 
 api.update_with_media(photo_path, status=status)
