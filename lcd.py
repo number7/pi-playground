@@ -43,9 +43,9 @@ LCD_LINE_2 = 0xC0 # LCD RAM address for the 2nd line
 # Timing constants
 E_PULSE = 0.0005
 E_DELAY = 0.0005
- 
-def main():
-  # Main program block
+
+def initGPIO():
+  # initialize GPIO pins
   GPIO.setwarnings(False)
   GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers
   GPIO.setup(LCD_E, GPIO.OUT)  # E
@@ -54,8 +54,39 @@ def main():
   GPIO.setup(LCD_D5, GPIO.OUT) # DB5
   GPIO.setup(LCD_D6, GPIO.OUT) # DB6
   GPIO.setup(LCD_D7, GPIO.OUT) # DB7
- 
-  # Initialise display
+
+def countdown(seconds):
+
+  try:
+    initGPIO()  
+    lcd_init()    
+
+    while seconds:
+      mins, secs = divmod(seconds, 60)
+      timeformat = '{:02d}:{:02d}'.format(mins, secs)
+
+      # print time
+      lcd_string("Refill the soda!",LCD_LINE_1)
+      lcd_string(timeformat,LCD_LINE_2)
+    
+      time.sleep(1)
+      seconds -= 1
+      lcd_byte(0x01,LCD_CMD) # 000001 Clear display
+
+    lcd_string("Shaming time!",LCD_LINE_1)
+    time.sleep(3)
+      
+  except KeyboardInterrupt:
+    pass
+  finally:
+    lcd_byte(0x01, LCD_CMD)
+    lcd_string("Goodbye!",LCD_LINE_1)
+    time.sleep(1)
+    lcd_byte(0x01, LCD_CMD)
+    GPIO.cleanup()
+
+def testLCD():
+  initGPIO()
   lcd_init()
  
   while True:
@@ -66,14 +97,14 @@ def main():
     
     time.sleep(1)
 
-    lcd_byte(0x01,LCD_CMD) # 000001 Clear display    # Send some text
+    lcd_byte(0x01,LCD_CMD) # 000001 Clear display
 
     time.sleep(1)
  
 def lcd_init():
-  # Initialise display
-  lcd_byte(0x33,LCD_CMD) # 110011 Initialise
-  lcd_byte(0x32,LCD_CMD) # 110010 Initialise
+  # initialize display
+  lcd_byte(0x33,LCD_CMD) # 110011 initialize
+  lcd_byte(0x32,LCD_CMD) # 110010 initialize
   lcd_byte(0x06,LCD_CMD) # 000110 Cursor move direction
   lcd_byte(0x0C,LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
   lcd_byte(0x28,LCD_CMD) # 101000 Data length, number of lines, font size
@@ -143,7 +174,7 @@ def lcd_string(message,line):
 if __name__ == '__main__':
  
   try:
-    main()
+    testLCD()
   except KeyboardInterrupt:
     pass
   finally:

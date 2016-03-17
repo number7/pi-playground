@@ -3,6 +3,7 @@
 # LCD control program
 #--------------------------------------
 import sys
-import lcd as screen
+import lcd
 
-screen.main()
+# calling the function to initialize the LCD
+lcd.countdown(15)
