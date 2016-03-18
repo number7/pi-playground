@@ -763,6 +763,7 @@ openssh-client					install
 openssh-server					install
 openssl						install
 oracle-java8-jdk				install
+p7zip             install
 parted						install
 passwd						install
 patch						install
