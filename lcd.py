@@ -44,7 +44,7 @@ LCD_LINE_2 = 0xC0 # LCD RAM address for the 2nd line
 E_PULSE = 0.0005
 E_DELAY = 0.0005
 
-def initGPIO():
+def initGPIO():    
   # initialize GPIO pins
   GPIO.setwarnings(False)
   GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers
@@ -55,51 +55,39 @@ def initGPIO():
   GPIO.setup(LCD_D6, GPIO.OUT) # DB6
   GPIO.setup(LCD_D7, GPIO.OUT) # DB7
 
-def countdown(seconds):
+def clearDisplay():
+    # 000001 Clear display
+    lcd_byte(0x01,LCD_CMD)
 
+def goodbye(message):
+    clearDisplay()
+    lcd_string(message,LCD_LINE_1)
+    time.sleep(1)
+    clearDisplay()
+
+def countdown(seconds, greeting):
   try:
     initGPIO()  
     lcd_init()    
 
+    # iterate over seconds to perform countdown
     while seconds:
       mins, secs = divmod(seconds, 60)
-      timeformat = '{:02d}:{:02d}'.format(mins, secs)
+      formattedTime = '{:02d}:{:02d}'.format(mins, secs)
 
-      # print time
-      lcd_string("Refill the soda!",LCD_LINE_1)
-      lcd_string(timeformat,LCD_LINE_2)
+      lcd_sendText(greeting, LCD_LINE_1)
+      lcd_sendText(formattedTime, LCD_LINE_2)
     
       time.sleep(1)
-      seconds -= 1
-      lcd_byte(0x01,LCD_CMD) # 000001 Clear display
 
-    lcd_string("Shaming time!",LCD_LINE_1)
-    time.sleep(3)
+      seconds -= 1
+      
+      clearDisplay() 
       
   except KeyboardInterrupt:
     pass
   finally:
-    lcd_byte(0x01, LCD_CMD)
-    lcd_string("Goodbye!",LCD_LINE_1)
-    time.sleep(1)
-    lcd_byte(0x01, LCD_CMD)
     GPIO.cleanup()
-
-def testLCD():
-  initGPIO()
-  lcd_init()
- 
-  while True:
- 
-    # Send some text
-    lcd_string("Refill the soda!",LCD_LINE_1)
-    lcd_string("*** 05:00 ***",LCD_LINE_2)
-    
-    time.sleep(1)
-
-    lcd_byte(0x01,LCD_CMD) # 000001 Clear display
-
-    time.sleep(1)
  
 def lcd_init():
   # initialize display
@@ -124,6 +112,7 @@ def lcd_byte(bits, mode):
   GPIO.output(LCD_D5, False)
   GPIO.output(LCD_D6, False)
   GPIO.output(LCD_D7, False)
+  
   if bits&0x10==0x10:
     GPIO.output(LCD_D4, True)
   if bits&0x20==0x20:
@@ -160,10 +149,27 @@ def lcd_toggle_enable():
   time.sleep(E_PULSE)
   GPIO.output(LCD_E, False)
   time.sleep(E_DELAY)
+
+def sendText(message,line,timeToDisplay):
+  try:
+    initGPIO()  
+    lcd_init()    
+
+    if line==1:
+        lcd_sendText(message,LCD_LINE_1)
+    if line==2:
+        lcd_sendText(message,LCD_LINE_2)    # iterate over seconds to perform countdown
+    if timeToDisplay > 0:
+        time.sleep(timeToDisplay)
+        clearDisplay()
+      
+  except KeyboardInterrupt:
+    pass
+  finally:
+    GPIO.cleanup()
  
-def lcd_string(message,line):
-  # Send string to display
- 
+def lcd_sendText(message,line):
+  # Send string to display 
   message = message.ljust(LCD_WIDTH," ")
  
   lcd_byte(line, LCD_CMD)
@@ -171,13 +177,13 @@ def lcd_string(message,line):
   for i in range(LCD_WIDTH):
     lcd_byte(ord(message[i]),LCD_CHR)
  
-if __name__ == '__main__':
- 
-  try:
-    testLCD()
-  except KeyboardInterrupt:
-    pass
-  finally:
-    lcd_byte(0x01, LCD_CMD)
-    # lcd_string("Goodbye!",LCD_LINE_1)
-    GPIO.cleanup()
+##if __name__ == '__main__':
+## 
+##  try:
+##    testLCD()
+##  except KeyboardInterrupt:
+##    pass
+##  finally:
+##    lcd_byte(0x01, LCD_CMD)
+##    # lcd_string("Goodbye!",LCD_LINE_1)
+##    GPIO.cleanup()
