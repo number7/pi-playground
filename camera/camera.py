@@ -8,7 +8,7 @@ import pygame.camera
 width = 640
 height = 480
 
-basedir = "/home/rock/pics"
+basedir = "images"
 
 def initCamera():
 	pygame.init()
@@ -17,29 +17,36 @@ def initCamera():
 	cam.start()
 	return cam
 
-def getDirName():
-	theDate = getDateTimeString("%Y%m%d")
-	directory = basedir + "/" + theDate
-	if not os.path.exists(directory):
-		os.makedirs(directory)
-	return directory
+# def getDirName():
+# 	theDate = getDateTimeString("%Y%m%d")
+# 	directory = basedir + "/" + theDate
+# 	if not os.path.exists(directory):
+# 		os.makedirs(directory)
+# 	return directory
 
-def getTime():
-	theTime = getDateTimeString("%H%M%S")
-	return theTime
+# def getTime():
+# 	theTime = getDateTimeString("%H%M%S")
+# 	return theTime
 
-def getDateTimeString(formatString):
-	return time.strftime(formatString)
+# def getDateTimeString(formatString):
+# 	return time.strftime(formatString)
+
+def getCurrentTime():
+	return datetime.datetime.time(datetime.datetime.now())
+
+def formatTime(theTime):
+	theTime.strftime("%H%M%S")
+
+def getFilename(theFormattedTime):
+	basedir + "/" + theFormattedTime + ".jpg"
 
 cam = initCamera()
 
-i = 0
 while True:
 	image = cam.get_image()
 	cam.stop
-	filename = getDirName() + "/" + getTime() + str(i) + ".jpg"
+	filename = getFilename(formatTime(getCurrentTime()))
 	print 'SNAP (' + filename + ').'
 	pygame.image.save(image, filename)
 	time.sleep(3)
-	i += 1
 

@@ -44,6 +44,9 @@ LCD_LINE_2 = 0xC0 # LCD RAM address for the 2nd line
 E_PULSE = 0.0005
 E_DELAY = 0.0005
 
+if __name__ == '__main__':
+    countdown(30, "Refill the soda!")
+
 def initGPIO():    
     # initialize GPIO pins
     GPIO.setwarnings(False)

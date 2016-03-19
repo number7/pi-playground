@@ -124,7 +124,7 @@ int main(int argc, char **argv)
     exit(255);
 
   }
-  printf("%d\n", (tmp_avg2 / j) - offset);
+  printf("%d", (tmp_avg2 / j) - offset);
 
 //  printf("average within %f percent: %d from %d samples, original: %d\n", spread_percent*100, (tmp_avg2 / j) - offset, j, tmp_avg - offset);
   unpull_pins();
@@ -208,16 +208,16 @@ unsigned long read_cnt(long offset, int argc) {
 
 
 if (argc < 2 ) {
- for (i=32;i;i--) {
-   printf("%d ", ((count-offset) & ( 1 << i )) > 0 );
-  }
+ //for (i=32;i;i--) {
+ //  printf("%d ", ((count-offset) & ( 1 << i )) > 0 );
+ // }
 
-  printf("n: %10d     -  ", count - offset);
-  printf("\n"); 
+ // printf("%d", count - offset);
+ // printf("\n"); 
 }
 
   return (count - offset);
-
+	
 }
 
 
