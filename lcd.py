@@ -45,19 +45,22 @@ E_PULSE = 0.0005
 E_DELAY = 0.0005
 
 def initGPIO():    
-  # initialize GPIO pins
-  GPIO.setwarnings(False)
-  GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers
-  GPIO.setup(LCD_E, GPIO.OUT)  # E
-  GPIO.setup(LCD_RS, GPIO.OUT) # RS
-  GPIO.setup(LCD_D4, GPIO.OUT) # DB4
-  GPIO.setup(LCD_D5, GPIO.OUT) # DB5
-  GPIO.setup(LCD_D6, GPIO.OUT) # DB6
-  GPIO.setup(LCD_D7, GPIO.OUT) # DB7
+    # initialize GPIO pins
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers
+    GPIO.setup(LCD_E, GPIO.OUT)  # E
+    GPIO.setup(LCD_RS, GPIO.OUT) # RS
+    GPIO.setup(LCD_D4, GPIO.OUT) # DB4
+    GPIO.setup(LCD_D5, GPIO.OUT) # DB5
+    GPIO.setup(LCD_D6, GPIO.OUT) # DB6
+    GPIO.setup(LCD_D7, GPIO.OUT) # DB7
 
 def clearDisplay():
     # 000001 Clear display
     lcd_byte(0x01,LCD_CMD)
+
+def cleanupGPIO():
+    GPIO.cleanup()
 
 def goodbye(message):
     clearDisplay()
@@ -87,7 +90,7 @@ def countdown(seconds, greeting):
   except KeyboardInterrupt:
     pass
   finally:
-    GPIO.cleanup()
+    cleanupGPIO()
  
 def lcd_init():
   # initialize display
