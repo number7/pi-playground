@@ -30,7 +30,7 @@ LCD_E  = 19  # change from GPIO 8 to GPIO 20 to GPIO 19
 LCD_D4 = 13  # change from GPIO 25 to GPIO 13
 LCD_D5 = 6   # change from GPIO 24 to GPIO 6
 LCD_D6 = 5   # change from GPIO 23 to GPIO 5
-LCD_D7 = 11  # change from GPIO 18 to GPIO 11
+LCD_D7 = 11  # change from GPIO 18 to GPIO 11 
  
 # Define some device constants
 LCD_WIDTH = 16    # Maximum characters per line
