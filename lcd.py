@@ -25,12 +25,12 @@ import RPi.GPIO as GPIO
 import time
  
 # Define GPIO to LCD mapping
-LCD_RS = 21  # change from GPIO 7 to GPIO 21
-LCD_E  = 20  # change from GPIO 8 to GPIO 20
-LCD_D4 = 25
-LCD_D5 = 24
-LCD_D6 = 23
-LCD_D7 = 18
+LCD_RS = 26  # change from GPIO 7 to GPIO 21 to GPIO 26
+LCD_E  = 19  # change from GPIO 8 to GPIO 20 to GPIO 19
+LCD_D4 = 13  # change from GPIO 25 to GPIO 13
+LCD_D5 = 6   # change from GPIO 24 to GPIO 6
+LCD_D6 = 5   # change from GPIO 23 to GPIO 5
+LCD_D7 = 11  # change from GPIO 18 to GPIO 11 
  
 # Define some device constants
 LCD_WIDTH = 16    # Maximum characters per line
@@ -44,20 +44,26 @@ LCD_LINE_2 = 0xC0 # LCD RAM address for the 2nd line
 E_PULSE = 0.0005
 E_DELAY = 0.0005
 
+if __name__ == '__main__':
+    countdown(30, "Refill the soda!")
+
 def initGPIO():    
-  # initialize GPIO pins
-  GPIO.setwarnings(False)
-  GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers
-  GPIO.setup(LCD_E, GPIO.OUT)  # E
-  GPIO.setup(LCD_RS, GPIO.OUT) # RS
-  GPIO.setup(LCD_D4, GPIO.OUT) # DB4
-  GPIO.setup(LCD_D5, GPIO.OUT) # DB5
-  GPIO.setup(LCD_D6, GPIO.OUT) # DB6
-  GPIO.setup(LCD_D7, GPIO.OUT) # DB7
+    # initialize GPIO pins
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers
+    GPIO.setup(LCD_E, GPIO.OUT)  # E
+    GPIO.setup(LCD_RS, GPIO.OUT) # RS
+    GPIO.setup(LCD_D4, GPIO.OUT) # DB4
+    GPIO.setup(LCD_D5, GPIO.OUT) # DB5
+    GPIO.setup(LCD_D6, GPIO.OUT) # DB6
+    GPIO.setup(LCD_D7, GPIO.OUT) # DB7
 
 def clearDisplay():
     # 000001 Clear display
     lcd_byte(0x01,LCD_CMD)
+
+def cleanupGPIO():
+    GPIO.cleanup()
 
 def goodbye(message):
     clearDisplay()
@@ -87,7 +93,7 @@ def countdown(seconds, greeting):
   except KeyboardInterrupt:
     pass
   finally:
-    GPIO.cleanup()
+    cleanupGPIO()
  
 def lcd_init():
   # initialize display
